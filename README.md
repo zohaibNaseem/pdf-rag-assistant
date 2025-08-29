@@ -81,14 +81,6 @@ IntelliDocAI is a sophisticated document intelligence platform that transforms h
    streamlit run user_app/app.py --server.port 8502
    ```
 
-### Windows Users
-```powershell
-# Use the provided PowerShell script
-   $env:PYTHONPATH = "."
-   streamlit run user_app/app.py --server.port 8502
-
-```
-
 ## 📖 Usage Guide
 
 ### 🛡️ Administrator Workflow
