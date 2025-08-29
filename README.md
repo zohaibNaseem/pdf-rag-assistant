@@ -56,8 +56,7 @@ IntelliDocAI is a sophisticated document intelligence platform that transforms h
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/intellidoc_ai.git
-   cd intellidoc_ai
+   git clone https://github.com/zohaibNaseem/intellidoc_AI.git
 
 2. **Install Dependencies**
    ```bash
