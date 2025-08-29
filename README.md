@@ -35,6 +35,7 @@ IntelliDocAI is a sophisticated document intelligence platform that transforms h
 ---
 ##  Interface
 ###  Admin Interface
+![alt text](visuals/admin.png)
 ![alt text](visuals/admin_interface.png)
 
 ###  User Interface
