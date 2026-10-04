@@ -1,7 +1,7 @@
-# IntelliDoc AI: document Q&A with admin and user roles
+# PDF RAG Assistant
 
-IntelliDoc AI is a retrieval-augmented generation (RAG) application for PDF documents. It has two
-roles:
+PDF RAG Assistant answers questions about PDF documents. It is a retrieval-augmented generation
+(RAG) application with two roles:
 
 * **Admin:** uploads PDFs, builds the search index and deletes documents.
 * **User:** asks questions about all documents in the library and gets answers in a chat.
@@ -43,8 +43,8 @@ Requirements: Python 3.8 or later and a Groq API key from [console.groq.com](htt
 
 1. Get the code and install the dependencies:
    ```bash
-   git clone https://github.com/zohaibNaseem/Intellidoc_AI-Role-based-access.git
-   cd Intellidoc_AI-Role-based-access
+   git clone https://github.com/zohaibNaseem/pdf-rag-assistant.git
+   cd pdf-rag-assistant
    pip install -r requirements.txt
    ```
 2. Copy `.env.example` to `.env`. Then set your values:
