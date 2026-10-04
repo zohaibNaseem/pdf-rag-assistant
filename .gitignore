@@ -1,5 +1,14 @@
-# Ignore Python cache and virtual environment
+# Python
 __pycache__/
 *.pyc
 venv/
+.venv/
+
+# Secrets: never commit environment files
+.env
+.env.*
+!.env.example
+
+# Editors
 .vscode/
+.idea/

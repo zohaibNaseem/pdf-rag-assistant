@@ -1,130 +1,83 @@
-#  IntelliDocAI - Enterprise Document Intelligence System
+# IntelliDoc AI: document Q&A with admin and user roles
 
-> **Advanced Multi-Document AI Assistant with Role-Based Access Control**
+IntelliDoc AI is a retrieval-augmented generation (RAG) application for PDF documents. It has two
+roles:
 
-IntelliDocAI is a sophisticated document intelligence platform that transforms how organizations interact with their document libraries. Unlike traditional single-document chat systems, IntelliDocAI provides enterprise-grade features including administrative document management, persistent storage, and multi-document querying capabilities.
+* **Admin:** uploads PDFs, builds the search index and deletes documents.
+* **User:** asks questions about all documents in the library and gets answers in a chat.
 
-##  System Flow
-![alt text](<visuals/system flow.png>)
+The documents stay available between sessions because the app saves the index to disk.
 
-##  Key Features
+![System flow](<visuals/system flow.png>)
 
-###  **Administrative Control**
-- **Secure Admin Panel** with password-protected access
-- **Bulk Document Processing** - Upload and process multiple PDFs simultaneously  
-- **Document Library Management** - View, organize, and delete documents
-- **Persistent Storage** - Documents remain available across sessions
+## How it works
 
-###  **Intelligent Chat Interface**
-- **Multi-Document Querying** - Ask questions across your entire document library
-- **Natural Conversation Flow** - Clean, human-like responses without technical jargon
-- **Context-Aware Responses** - Maintains conversation history and context
-- **Real-Time Processing** - Instant responses with thinking indicators
+```
+PDF upload -> text extraction -> chunking -> embeddings -> FAISS index (saved) -> retrieval -> LLM answer
+```
 
+| Part | Tool |
+|---|---|
+| PDF text extraction | PyMuPDF |
+| Chunking and RAG chain | LangChain |
+| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` (Hugging Face) |
+| Vector store | FAISS |
+| LLM | Groq API, model `llama3-70b-8192` (set in `chatpdf.py`) |
+| User interface | Streamlit (two separate apps) |
 
-##  What Makes IntelliDocAI Different
+## Screenshots
 
-| Feature | Traditional ChatPDF | IntelliDocAI |
-|---------|-------------------|--------------|
-| **Document Scope** | Single document per session | Multi-document library |
-| **Access Control** | Open access | Role-based admin/user system |
-| **Data Persistence** | Session-based | Permanent document storage |
-| **Management** | No document management | Full CRUD operations |
-| **Enterprise Ready** | Personal use | Organization-wide deployment |
+**Admin interface**
 
----
-##  Interface
-###  Admin Interface
-![alt text](visuals/admin.png)
-![alt text](visuals/admin_interface.png)
+![Admin login](visuals/admin.png)
+![Admin interface](visuals/admin_interface.png)
 
-###  User Interface
-![alt text](visuals/user_interface.png)
+**User interface**
 
-![alt text](visuals/chat_interface.png)
+![User interface](visuals/user_interface.png)
+![Chat](visuals/chat_interface.png)
 
+## Setup
 
-##  Installation & Setup
+Requirements: Python 3.8 or later and a Groq API key from [console.groq.com](https://console.groq.com).
 
-###  Prerequisites
-- Python **3.8+**
-- A **Groq API Key** ([Get yours here](https://console.groq.com))
-
----
-
-### ⚡ Quick Start
-
-1. **Clone the Repository**
+1. Get the code and install the dependencies:
    ```bash
-   git clone https://github.com/zohaibNaseem/intellidoc_AI.git
-
-2. **Install Dependencies**
-   ```bash
+   git clone https://github.com/zohaibNaseem/Intellidoc_AI-Role-based-access.git
+   cd Intellidoc_AI-Role-based-access
    pip install -r requirements.txt
    ```
-
-3. **Configure Environment**
+2. Copy `.env.example` to `.env`. Then set your values:
+   ```
+   GROQ_API_KEY=your_groq_api_key_here
+   ADMIN_PASSWORD=choose_a_strong_password
+   ```
+   Do not commit the `.env` file. The `.gitignore` file blocks it.
+3. Start the admin app:
    ```bash
-   # Create .env file
-   echo "GROQ_API_KEY=your_groq_api_key_here" > .env
+   PYTHONPATH=. streamlit run admin_app/app.py --server.port 8501
+   ```
+   On Windows PowerShell, set the path first: `$env:PYTHONPATH = "."`.
+4. In a second terminal, start the user app:
+   ```bash
+   PYTHONPATH=. streamlit run user_app/app.py --server.port 8502
    ```
 
-4. **Launch Admin Panel**
-   ```bash
-   $env:PYTHONPATH = "."
-   streamlit run admin_app/app.py --server.port 8501
-   ```
+## Use
 
-5. **Launch User Interface** (in new terminal)
-   ```bash
-   $env:PYTHONPATH = "."
-   streamlit run user_app/app.py --server.port 8502
-   ```
+**Admin** (`http://localhost:8501`)
+1. Enter the password from `ADMIN_PASSWORD`.
+2. Select one or more PDF files. Click "Process Documents".
+3. Examine the document list. Delete the documents that you do not need.
 
+**User** (`http://localhost:8502`)
+1. Type a question about the documents.
+2. Ask follow-up questions. The chat keeps the conversation history.
 
-## 📖 Usage Guide
+## Sample data
+The `data/` folder contains two sample documents for a fictional clinic ("ZohaibCare Plus"). The
+`embeddings/` folder contains the index for these documents. Thus you can test the user app at once.
 
-### 🛡️ Administrator Workflow
-
-1. **Access Admin Panel**
-   - Navigate to `http://localhost:8501`
-   - Enter admin password (default: **`admin123`**)
-
-2. **Upload Documents**
-   - Select multiple PDF files
-   - Click "Process Documents"
-   - Wait for embedding generation
-
-3. **Manage Library**
-   - View all uploaded documents
-   - Delete unwanted files
-   - Monitor processing status
-
-### 👤 User Workflow
-
-1. **Access Chat Interface**
-   - Navigate to `http://localhost:8502`
-   - Start asking questions immediately
-
-2. **Interactive Conversations**
-   - Ask questions about any uploaded document
-   - Get contextual, natural responses
-   - Build on previous conversations
-
-## 🔧 Technical Architecture
-
-### Core Components
-
-- **🧠 LangChain Integration**: Advanced RAG (Retrieval-Augmented Generation)
-- **⚡ Groq LLM**: High-speed inference with Llama-3-70B model
-- **🔍 FAISS Vector Store**: Efficient similarity search and clustering
-- **📄 PyMuPDF**: Robust PDF processing and text extraction
-- **🎨 Streamlit**: Modern web application framework
-
-### AI Pipeline
-
-```
-PDF Upload → Text Extraction → Chunking → Embedding → Vector Storage → Query Processing → LLM Response
-```
-
-### For now, I’ve uploaded a basic sample dataset, for which embeddings have also been created.
+## Limits
+* The admin login uses one shared password. It is not a full user-management system.
+* The index is a local file. More than one server cannot share it.

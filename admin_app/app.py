@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from chatpdf import process_and_save_pdfs
 import hashlib
+import hmac
 
 # Set page config
 st.set_page_config(
@@ -84,9 +85,11 @@ def check_password():
     """Returns True if the user has entered the correct password."""
     def password_entered():
         """Checks whether a password entered by the user is correct."""
-        if st.session_state["password"] == "admin123":  # Change this password as needed
+        expected = os.getenv("ADMIN_PASSWORD", "")
+        entered = st.session_state["password"]
+        if expected and hmac.compare_digest(entered, expected):
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store password
+            del st.session_state["password"]  # Do not keep the password in the session.
         else:
             st.session_state["password_correct"] = False
 
